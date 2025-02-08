@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/khatibomar/kv/assert"
+	"github.com/khatibomar/kv/internal/assert"
 )
 
 func TestValidate(t *testing.T) {

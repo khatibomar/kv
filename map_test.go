@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/khatibomar/kv/assert"
+	"github.com/khatibomar/kv/internal/assert"
 )
 
 func TestMap(t *testing.T) {

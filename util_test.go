@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/khatibomar/kv/assert"
+	"github.com/khatibomar/kv/internal/assert"
 )
 
 func TestEnsureString(t *testing.T) {

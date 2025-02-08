@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/khatibomar/kv/assert"
+	"github.com/khatibomar/kv/internal/assert"
 )
 
 func TestMatch(t *testing.T) {

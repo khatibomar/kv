@@ -8,7 +8,7 @@ import (
 	"database/sql"
 	"testing"
 
-	"github.com/khatibomar/kv/assert"
+	"github.com/khatibomar/kv/internal/assert"
 )
 
 func TestLength(t *testing.T) {

@@ -7,7 +7,7 @@ package kv
 import (
 	"testing"
 
-	"github.com/khatibomar/kv/assert"
+	"github.com/khatibomar/kv/internal/assert"
 )
 
 func TestMultipleOf(t *testing.T) {

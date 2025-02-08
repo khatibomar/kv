@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/khatibomar/kv"
-	"github.com/khatibomar/kv/assert"
+	"github.com/khatibomar/kv/internal/assert"
 )
 
 func TestAll(t *testing.T) {

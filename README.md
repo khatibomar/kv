@@ -23,8 +23,8 @@ For an example on how this library is used in an application, please refer to [g
 ## Getting Started
 
 The KV package is a fork of [ozzo-validation](https://github.com/go-ozzo/ozzo-validation) mainly includes a set of validation rules and two validation methods. You use 
-validation rules to describe how a value should be considered valid, and you call either `validation.Validate()`
-or `validation.ValidateStruct()` to validate the value.
+validation rules to describe how a value should be considered valid, and you call either `kv.Validate()`
+or `kv.ValidateStruct()` to validate the value.
 In this fork I am aiming to remove usage of reflection.
 
 ### Installation
@@ -37,7 +37,7 @@ go get github.com/khatibomar/kv
 
 ### Validating a Simple Value
 
-For a simple value, such as a string or an integer, you may use `validation.Validate()` to validate it. For example, 
+For a simple value, such as a string or an integer, you may use `kv.Validate()` to validate it. For example, 
 
 ```go
 package main
@@ -51,9 +51,9 @@ import (
 
 func main() {
 	data := "example"
-	err := validation.Validate(data,
-		validation.Required,       // not empty
-		validation.Length(5, 100), // length between 5 and 100
+	err := kv.Validate(data,
+		kv.Required,       // not empty
+		kv.Length(5, 100), // length between 5 and 100
 		is.URL,                    // is a valid URL
 	)
 	fmt.Println(err)
@@ -62,7 +62,7 @@ func main() {
 }
 ```
 
-The method `validation.Validate()` will run through the rules in the order that they are listed. If a rule fails
+The method `kv.Validate()` will run through the rules in the order that they are listed. If a rule fails
 the validation, the method will return the corresponding error and skip the rest of the rules. The method will
 return nil if the value passes all validation rules.
 
@@ -71,7 +71,7 @@ return nil if the value passes all validation rules.
 
 For a struct value, you usually want to check if its fields are valid. For example, in a RESTful application, you
 may unmarshal the request payload into a struct and then validate the struct fields. If one or multiple fields
-are invalid, you may want to get an error describing which fields are invalid. You can use `validation.ValidateStruct()`
+are invalid, you may want to get an error describing which fields are invalid. You can use `kv.ValidateStruct()`
 to achieve this purpose. A single struct can have rules for multiple fields, and a field can be associated with multiple 
 rules. For example,
 
@@ -84,15 +84,15 @@ type Address struct {
 }
 
 func (a Address) Validate() error {
-	return validation.ValidateStruct(&a,
+	return kv.ValidateStruct(&a,
 		// Street cannot be empty, and the length must between 5 and 50
-		validation.Field(&a.Street, validation.Required, validation.Length(5, 50)),
+		kv.Field(&a.Street, kv.Required, kv.Length(5, 50)),
 		// City cannot be empty, and the length must between 5 and 50
-		validation.Field(&a.City, validation.Required, validation.Length(5, 50)),
+		kv.Field(&a.City, kv.Required, kv.Length(5, 50)),
 		// State cannot be empty, and must be a string consisting of two letters in upper case
-		validation.Field(&a.State, validation.Required, validation.Match(regexp.MustCompile("^[A-Z]{2}$"))),
+		kv.Field(&a.State, kv.Required, kv.Match(regexp.MustCompile("^[A-Z]{2}$"))),
 		// State cannot be empty, and must be a string consisting of five digits
-		validation.Field(&a.Zip, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{5}$"))),
+		kv.Field(&a.Zip, kv.Required, kv.Match(regexp.MustCompile("^[0-9]{5}$"))),
 	)
 }
 
@@ -109,8 +109,8 @@ fmt.Println(err)
 // Street: the length must be between 5 and 50; State: must be in a valid format.
 ```
 
-Note that when calling `validation.ValidateStruct` to validate a struct, you should pass to the method a pointer 
-to the struct instead of the struct itself. Similarly, when calling `validation.Field` to specify the rules
+Note that when calling `kv.ValidateStruct` to validate a struct, you should pass to the method a pointer 
+to the struct instead of the struct itself. Similarly, when calling `kv.Field` to specify the rules
 for a struct field, you should use a pointer to the struct field. 
 
 When the struct validation is performed, the fields are validated in the order they are specified in `ValidateStruct`. 
@@ -120,7 +120,7 @@ If a rule fails, an error is recorded for that field, and the validation will co
 
 ### Validating a Map
 
-Sometimes you might need to work with dynamic data stored in maps rather than a typed model. You can use `validation.Map()`
+Sometimes you might need to work with dynamic data stored in maps rather than a typed model. You can use `kv.Map()`
 in this situation. A single map can have rules for multiple keys, and a key can be associated with multiple 
 rules. For example,
 
@@ -136,22 +136,22 @@ c := map[string]interface{}{
 	},
 }
 
-err := validation.Validate(c,
-	validation.Map(
+err := kv.Validate(c,
+	kv.Map(
 		// Name cannot be empty, and the length must be between 5 and 20.
-		validation.Key("Name", validation.Required, validation.Length(5, 20)),
+		kv.Key("Name", kv.Required, kv.Length(5, 20)),
 		// Email cannot be empty and should be in a valid email format.
-		validation.Key("Email", validation.Required, is.Email),
+		kv.Key("Email", kv.Required, is.Email),
 		// Validate Address using its own validation rules
-		validation.Key("Address", validation.Map(
+		kv.Key("Address", kv.Map(
 			// Street cannot be empty, and the length must between 5 and 50
-			validation.Key("Street", validation.Required, validation.Length(5, 50)),
+			kv.Key("Street", kv.Required, kv.Length(5, 50)),
 			// City cannot be empty, and the length must between 5 and 50
-			validation.Key("City", validation.Required, validation.Length(5, 50)),
+			kv.Key("City", kv.Required, kv.Length(5, 50)),
 			// State cannot be empty, and must be a string consisting of two letters in upper case
-			validation.Key("State", validation.Required, validation.Match(regexp.MustCompile("^[A-Z]{2}$"))),
+			kv.Key("State", kv.Required, kv.Match(regexp.MustCompile("^[A-Z]{2}$"))),
 			// State cannot be empty, and must be a string consisting of five digits
-			validation.Key("Zip", validation.Required, validation.Match(regexp.MustCompile("^[0-9]{5}$"))),
+			kv.Key("Zip", kv.Required, kv.Match(regexp.MustCompile("^[0-9]{5}$"))),
 		)),
 	),
 )
@@ -167,10 +167,10 @@ If a rule fails, an error is recorded for that key, and the validation will cont
 
 ### Validation Errors
 
-The `validation.ValidateStruct` method returns validation errors found in struct fields in terms of `validation.Errors` 
+The `kv.ValidateStruct` method returns validation errors found in struct fields in terms of `kv.Errors` 
 which is a map of fields and their corresponding errors. Nil is returned if validation passes.
 
-By default, `validation.Errors` uses the struct tags named `json` to determine what names should be used to 
+By default, `kv.Errors` uses the struct tags named `json` to determine what names should be used to 
 represent the invalid fields. The type also implements the `json.Marshaler` interface so that it can be marshaled 
 into a proper JSON object. For example,
 
@@ -191,7 +191,7 @@ fmt.Println(string(b))
 // {"street":"the length must be between 5 and 50","state":"must be in a valid format"}
 ```
 
-You may modify `validation.ErrorTag` to use a different struct tag name.
+You may modify `kv.ErrorTag` to use a different struct tag name.
 
 If you do not like the magic that `ValidateStruct` determines error keys based on struct field names or corresponding
 tag values, you may use the following alternative approach:
@@ -205,17 +205,17 @@ c := Customer{
 	},
 }
 
-err := validation.Errors{
-	"name": validation.Validate(c.Name, validation.Required, validation.Length(5, 20)),
-	"email": validation.Validate(c.Name, validation.Required, is.Email),
-	"zip": validation.Validate(c.Address.Zip, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{5}$"))),
+err := kv.Errors{
+	"name": kv.Validate(c.Name, kv.Required, kv.Length(5, 20)),
+	"email": kv.Validate(c.Name, kv.Required, is.Email),
+	"zip": kv.Validate(c.Address.Zip, kv.Required, kv.Match(regexp.MustCompile("^[0-9]{5}$"))),
 }.Filter()
 fmt.Println(err)
 // Output:
 // email: must be a valid email address; zip: cannot be blank.
 ```
 
-In the above example, we build a `validation.Errors` by a list of names and the corresponding validation results. 
+In the above example, we build a `kv.Errors` by a list of names and the corresponding validation results. 
 At the end we call `Errors.Filter()` to remove from `Errors` all nils which correspond to those successful validation 
 results. The method will return nil if `Errors` is empty.
 
@@ -234,12 +234,12 @@ the same data to perform validation again, hoping the program resumes functionin
 fails due to data error, the user should generally not resubmit the same data again.
 
 To differentiate internal errors from validation errors, when an internal error occurs in a validator, wrap it
-into `validation.InternalError` by calling `validation.NewInternalError()`. The user of the validator can then check
+into `kv.InternalError` by calling `kv.NewInternalError()`. The user of the validator can then check
 if a returned error is an internal error or not. For example,
 
 ```go
 if err := a.Validate(); err != nil {
-	if e, ok := err.(validation.InternalError); ok {
+	if e, ok := err.(kv.InternalError); ok {
 		// an internal error happened
 		fmt.Println(e.InternalError())
 	}
@@ -249,21 +249,21 @@ if err := a.Validate(); err != nil {
 
 ## Validatable Types
 
-A type is validatable if it implements the `validation.Validatable` interface. 
+A type is validatable if it implements the `kv.Validatable` interface. 
 
-When `validation.Validate` is used to validate a validatable value, if it does not find any error with the 
+When `kv.Validate` is used to validate a validatable value, if it does not find any error with the 
 given validation rules, it will further call the value's `Validate()` method. 
 
-Similarly, when `validation.ValidateStruct` is validating a struct field whose type is validatable, it will call 
+Similarly, when `kv.ValidateStruct` is validating a struct field whose type is validatable, it will call 
 the field's `Validate` method after it passes the listed rules.
 
-> Note: When implementing `validation.Validatable`, do not call `validation.Validate()` to validate the value in its
+> Note: When implementing `kv.Validatable`, do not call `kv.Validate()` to validate the value in its
 > original type because this will cause infinite loops. For example, if you define a new type `MyString` as `string`
-> and implement `validation.Validatable` for `MyString`, within the `Validate()` function you should cast the value 
-> to `string` first before calling `validation.Validate()` to validate it.
+> and implement `kv.Validatable` for `MyString`, within the `Validate()` function you should cast the value 
+> to `string` first before calling `kv.Validate()` to validate it.
 
 In the following example, the `Address` field of `Customer` is validatable because `Address` implements 
-`validation.Validatable`. Therefore, when validating a `Customer` struct with `validation.ValidateStruct`,
+`kv.Validatable`. Therefore, when validating a `Customer` struct with `kv.ValidateStruct`,
 validation will "dive" into the `Address` field.
 
 ```go
@@ -275,15 +275,15 @@ type Customer struct {
 }
 
 func (c Customer) Validate() error {
-	return validation.ValidateStruct(&c,
+	return kv.ValidateStruct(&c,
 		// Name cannot be empty, and the length must be between 5 and 20.
-		validation.Field(&c.Name, validation.Required, validation.Length(5, 20)),
+		kv.Field(&c.Name, kv.Required, kv.Length(5, 20)),
 		// Gender is optional, and should be either "Female" or "Male".
-		validation.Field(&c.Gender, validation.In("Female", "Male")),
+		kv.Field(&c.Gender, kv.In("Female", "Male")),
 		// Email cannot be empty and should be in a valid email format.
-		validation.Field(&c.Email, validation.Required, is.Email),
+		kv.Field(&c.Email, kv.Required, is.Email),
 		// Validate Address using its own validation rules
-		validation.Field(&c.Address),
+		kv.Field(&c.Address),
 	)
 }
 
@@ -305,13 +305,13 @@ fmt.Println(err)
 ```
 
 Sometimes, you may want to skip the invocation of a type's `Validate` method. To do so, simply associate
-a `validation.Skip` rule with the value being validated.
+a `kv.Skip` rule with the value being validated.
 
 ### Maps/Slices/Arrays of Validatables
 
-When validating an iterable (map, slice, or array), whose element type implements the `validation.Validatable` interface,
-the `validation.Validate` method will call the `Validate` method of every non-nil element.
-The validation errors of the elements will be returned as `validation.Errors` which maps the keys of the
+When validating an iterable (map, slice, or array), whose element type implements the `kv.Validatable` interface,
+the `kv.Validate` method will call the `Validate` method of every non-nil element.
+The validation errors of the elements will be returned as `kv.Errors` which maps the keys of the
 invalid elements to their corresponding validation errors. For example,
 
 ```go
@@ -320,13 +320,13 @@ addresses := []Address{
 	Address{Street: "123 Main St", City: "Vienna", State: "VA", Zip: "12345"},
 	Address{City: "Unknown", State: "NC", Zip: "123"},
 }
-err := validation.Validate(addresses)
+err := kv.Validate(addresses)
 fmt.Println(err)
 // Output:
 // 0: (City: cannot be blank; Street: cannot be blank.); 2: (Street: cannot be blank; Zip: must be in a valid format.).
 ```
 
-When using `validation.ValidateStruct` to validate a struct, the above validation procedure also applies to those struct 
+When using `kv.ValidateStruct` to validate a struct, the above validation procedure also applies to those struct 
 fields which are map/slices/arrays of validatables. 
 
 #### Each
@@ -340,11 +340,11 @@ type Customer struct {
 }
 
 func (c Customer) Validate() error {
-    return validation.ValidateStruct(&c,
+    return kv.ValidateStruct(&c,
         // Name cannot be empty, and the length must be between 5 and 20.
-		validation.Field(&c.Name, validation.Required, validation.Length(5, 20)),
+		kv.Field(&c.Name, kv.Required, kv.Length(5, 20)),
 		// Emails are optional, but if given must be valid.
-		validation.Field(&c.Emails, validation.Each(is.Email)),
+		kv.Field(&c.Emails, kv.Each(is.Email)),
     )
 }
 
@@ -365,9 +365,9 @@ fmt.Println(err)
 ### Pointers
 
 When a value being validated is a pointer, most validation rules will validate the actual value pointed to by the pointer.
-If the pointer is nil, these rules will skip the validation.
+If the pointer is nil, these rules will skip the kv.
 
-An exception is the `validation.Required` and `validation.NotNil` rules. When a pointer is nil, they
+An exception is the `kv.Required` and `kv.NotNil` rules. When a pointer is nil, they
 will report a validation error.
 
 
@@ -383,16 +383,16 @@ the returned value instead.
 When validating input values, there are two different scenarios about checking if input values are provided or not.
 
 In the first scenario, an input value is considered missing if it is not entered or it is entered as a zero value
-(e.g. an empty string, a zero integer). You can use the `validation.Required` rule in this case.
+(e.g. an empty string, a zero integer). You can use the `kv.Required` rule in this case.
 
 In the second scenario, an input value is considered missing only if it is not entered. A pointer field is usually
 used in this case so that you can detect if a value is entered or not by checking if the pointer is nil or not.
-You can use the `validation.NotNil` rule to ensure a value is entered (even if it is a zero value).
+You can use the `kv.NotNil` rule to ensure a value is entered (even if it is a zero value).
 
 
 ### Embedded Structs
 
-The `validation.ValidateStruct` method will properly validate a struct that contains embedded structs. In particular,
+The `kv.ValidateStruct` method will properly validate a struct that contains embedded structs. In particular,
 the fields of an embedded struct are treated as if they belong directly to the containing struct. For example,
 
 ```go
@@ -406,9 +406,9 @@ type Manager struct {
 }
 
 m := Manager{}
-err := validation.ValidateStruct(&m,
-	validation.Field(&m.Name, validation.Required),
-	validation.Field(&m.Level, validation.Required),
+err := kv.ValidateStruct(&m,
+	kv.Field(&m.Name, kv.Required),
+	kv.Field(&m.Level, kv.Required),
 )
 fmt.Println(err)
 // Output:
@@ -419,19 +419,19 @@ In the above code, we use `&m.Name` to specify the validation of the `Name` fiel
 And the validation error uses `Name` as the key for the error associated with the `Name` field as if `Name` a field
 directly belonging to `Manager`.
 
-If `Employee` implements the `validation.Validatable` interface, we can also use the following code to validate
+If `Employee` implements the `kv.Validatable` interface, we can also use the following code to validate
 `Manager`, which generates the same validation result:
 
 ```go
 func (e Employee) Validate() error {
-	return validation.ValidateStruct(&e,
-		validation.Field(&e.Name, validation.Required),
+	return kv.ValidateStruct(&e,
+		kv.Field(&e.Name, kv.Required),
 	)
 }
 
-err := validation.ValidateStruct(&m,
-	validation.Field(&m.Employee),
-	validation.Field(&m.Level, validation.Required),
+err := kv.ValidateStruct(&m,
+	kv.Field(&m.Employee),
+	kv.Field(&m.Level, kv.Required),
 )
 fmt.Println(err)
 // Output:
@@ -443,26 +443,26 @@ fmt.Println(err)
 
 Sometimes, we may want to validate a value only when certain condition is met. For example, we want to ensure the 
 `unit` struct field is not empty only when the `quantity` field is not empty; or we may want to ensure either `email`
-or `phone` is provided. The so-called conditional validation can be achieved with the help of `validation.When`.
+or `phone` is provided. The so-called conditional validation can be achieved with the help of `kv.When`.
 The following code implements the aforementioned examples:
 
 ```go
-result := validation.ValidateStruct(&a,
-    validation.Field(&a.Unit, validation.When(a.Quantity != "", validation.Required).Else(validation.Nil)),
-    validation.Field(&a.Phone, validation.When(a.Email == "", validation.Required.Error('Either phone or Email is required.')),
-    validation.Field(&a.Email, validation.When(a.Phone == "", validation.Required.Error('Either phone or Email is required.')),
+result := kv.ValidateStruct(&a,
+    kv.Field(&a.Unit, kv.When(a.Quantity != "", kv.Required).Else(kv.Nil)),
+    kv.Field(&a.Phone, kv.When(a.Email == "", kv.Required.Error('Either phone or Email is required.')),
+    kv.Field(&a.Email, kv.When(a.Phone == "", kv.Required.Error('Either phone or Email is required.')),
 )
 ```
 
-Note that `validation.When` and `validation.When.Else` can take a list of validation rules. These rules will be executed only when the condition is true (When) or false (Else).
+Note that `kv.When` and `kv.When.Else` can take a list of validation rules. These rules will be executed only when the condition is true (When) or false (Else).
 
-The above code can also be simplified using the shortcut `validation.Required.When`:
+The above code can also be simplified using the shortcut `kv.Required.When`:
 
 ```go
-result := validation.ValidateStruct(&a,
-    validation.Field(&a.Unit, validation.Required.When(a.Quantity != ""), validation.Nil.When(a.Quantity == "")),
-    validation.Field(&a.Phone, validation.Required.When(a.Email == "").Error('Either phone or Email is required.')),
-    validation.Field(&a.Email, validation.Required.When(a.Phone == "").Error('Either phone or Email is required.')),
+result := kv.ValidateStruct(&a,
+    kv.Field(&a.Unit, kv.Required.When(a.Quantity != ""), kv.Nil.When(a.Quantity == "")),
+    kv.Field(&a.Phone, kv.Required.When(a.Email == "").Error('Either phone or Email is required.')),
+    kv.Field(&a.Email, kv.Required.When(a.Phone == "").Error('Either phone or Email is required.')),
 )
 ```
 
@@ -473,9 +473,9 @@ of the rules. For example,
 
 ```go
 data := "2123"
-err := validation.Validate(data,
-	validation.Required.Error("is required"),
-	validation.Match(regexp.MustCompile("^[0-9]{5}$")).Error("must be a string with five digits"),
+err := kv.Validate(data,
+	kv.Required.Error("is required"),
+	kv.Match(regexp.MustCompile("^[0-9]{5}$")).Error("must be a string with five digits"),
 )
 fmt.Println(err)
 // Output:
@@ -486,7 +486,7 @@ You can also customize the pre-defined error(s) of a built-in rule such that the
 instance of the rule. For example, the `Required` rule uses the pre-defined error `ErrRequired`. You can customize it
 during the application initialization:
 ```go
-validation.ErrRequired = validation.ErrRequired.SetMessage("the value is required") 
+kv.ErrRequired = kv.ErrRequired.SetMessage("the value is required") 
 ```
 
 ### Error Code and Message Translation
@@ -495,12 +495,12 @@ The errors returned by the validation rules implement the `Error` interface whic
 to provide the error code information. While the message of a validation error is often customized, the code is immutable.
 You can use error code to programmatically check a validation error or look for the translation of the corresponding message.
 
-If you are developing your own validation rules, you can use `validation.NewError()` to create a validation error which
+If you are developing your own validation rules, you can use `kv.NewError()` to create a validation error which
 implements the aforementioned `Error` interface.
 
 ## Creating Custom Rules
 
-Creating a custom rule is as simple as implementing the `validation.Rule` interface. The interface contains a single
+Creating a custom rule is as simple as implementing the `kv.Rule` interface. The interface contains a single
 method as shown below, which should validate the value and return the validation error, if any:
 
 ```go
@@ -508,7 +508,7 @@ method as shown below, which should validate the value and return the validation
 Validate(value interface{}) error
 ```
 
-If you already have a function with the same signature as shown above, you can call `validation.By()` to turn
+If you already have a function with the same signature as shown above, you can call `kv.By()` to turn
 it into a validation rule. For example,
 
 ```go
@@ -520,7 +520,7 @@ func checkAbc(value interface{}) error {
 	return nil
 }
 
-err := validation.Validate("xyz", validation.By(checkAbc))
+err := kv.Validate("xyz", kv.By(checkAbc))
 fmt.Println(err)
 // Output: must be abc
 ```
@@ -528,7 +528,7 @@ fmt.Println(err)
 If your validation function takes additional parameters, you can use the following closure trick:
 
 ```go
-func stringEquals(str string) validation.RuleFunc {
+func stringEquals(str string) kv.RuleFunc {
 	return func(value interface{}) error {
 		s, _ := value.(string)
         if s != str {
@@ -538,7 +538,7 @@ func stringEquals(str string) validation.RuleFunc {
     }
 }
 
-err := validation.Validate("xyz", validation.By(stringEquals("abc")))
+err := kv.Validate("xyz", kv.By(stringEquals("abc")))
 fmt.Println(err)
 // Output: unexpected string
 ```
@@ -550,9 +550,9 @@ When a combination of several rules are used in multiple places, you may use the
 rule group so that your code is more maintainable.
 
 ```go
-var NameRule = []validation.Rule{
-	validation.Required,
-	validation.Length(5, 20),
+var NameRule = []kv.Rule{
+	kv.Required,
+	kv.Length(5, 20),
 }
 
 type User struct {
@@ -561,9 +561,9 @@ type User struct {
 }
 
 func (u User) Validate() error {
-	return validation.ValidateStruct(&u,
-		validation.Field(&u.FirstName, NameRule...),
-		validation.Field(&u.LastName, NameRule...),
+	return kv.ValidateStruct(&u,
+		kv.Field(&u.FirstName, NameRule...),
+		kv.Field(&u.LastName, NameRule...),
 	)
 }
 ```
@@ -575,19 +575,19 @@ group to validate both `FirstName` and `LastName`.
 ## Context-aware Validation
 
 While most validation rules are self-contained, some rules may depend dynamically on a context. A rule may implement the
-`validation.RuleWithContext` interface to support the so-called context-aware validation.
+`kv.RuleWithContext` interface to support the so-called context-aware kv.
  
-To validate an arbitrary value with a context, call `validation.ValidateWithContext()`. The `context.Conext` parameter 
-will be passed along to those rules that implement `validation.RuleWithContext`.
+To validate an arbitrary value with a context, call `kv.ValidateWithContext()`. The `context.Conext` parameter 
+will be passed along to those rules that implement `kv.RuleWithContext`.
 
-To validate the fields of a struct with a context, call `validation.ValidateStructWithContext()`. 
+To validate the fields of a struct with a context, call `kv.ValidateStructWithContext()`. 
 
-You can define a context-aware rule from scratch by implementing both `validation.Rule` and `validation.RuleWithContext`. 
-You can also use `validation.WithContext()` to turn a function into a context-aware rule. For example,
+You can define a context-aware rule from scratch by implementing both `kv.Rule` and `kv.RuleWithContext`. 
+You can also use `kv.WithContext()` to turn a function into a context-aware rule. For example,
 
 
 ```go
-rule := validation.WithContext(func(ctx context.Context, value interface{}) error {
+rule := kv.WithContext(func(ctx context.Context, value interface{}) error {
 	if ctx.Value("secret") == value.(string) {
 	    return nil
 	}
@@ -595,13 +595,13 @@ rule := validation.WithContext(func(ctx context.Context, value interface{}) erro
 })
 value := "xyz"
 ctx := context.WithValue(context.Background(), "secret", "example")
-err := validation.ValidateWithContext(ctx, value, rule)
+err := kv.ValidateWithContext(ctx, value, rule)
 fmt.Println(err)
 // Output: value incorrect
 ```
 
-When performing context-aware validation, if a rule does not implement `validation.RuleWithContext`, its
-`validation.Rule` will be used instead.
+When performing context-aware validation, if a rule does not implement `kv.RuleWithContext`, its
+`kv.Rule` will be used instead.
 
 
 ## Built-in Validation Rules

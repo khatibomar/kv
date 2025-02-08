@@ -7,7 +7,7 @@ package kv
 import (
 	"testing"
 
-	"github.com/khatibomar/kv/assert"
+	"github.com/khatibomar/kv/internal/assert"
 )
 
 type MyInterface interface {

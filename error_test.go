@@ -8,7 +8,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/khatibomar/kv/assert"
+	"github.com/khatibomar/kv/internal/assert"
 )
 
 func TestNewInternalError(t *testing.T) {

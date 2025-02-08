@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/khatibomar/kv/assert"
+	"github.com/khatibomar/kv/internal/assert"
 )
 
 func validateMe(s string) bool {
