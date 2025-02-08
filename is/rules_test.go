@@ -8,14 +8,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/stretchr/testify/assert"
+	"github.com/khatibomar/kv"
+	"github.com/khatibomar/kv/assert"
 )
 
 func TestAll(t *testing.T) {
 	tests := []struct {
 		tag            string
-		rule           validation.Rule
+		rule           kv.Rule
 		valid, invalid string
 		err            string
 	}{

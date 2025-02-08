@@ -2,8 +2,8 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-// Package validation provides configurable and extensible rules for validating data of various types.
-package validation
+// package kv provides configurable and extensible rules for validating data of various types.
+package kv
 
 import (
 	"context"

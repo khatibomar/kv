@@ -2,13 +2,13 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-package validation
+package kv
 
 import (
 	"regexp"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/khatibomar/kv/assert"
 )
 
 func TestMatch(t *testing.T) {

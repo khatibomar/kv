@@ -51,8 +51,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/go-ozzo/ozzo-validation/v4/is"
+	""github.com/khatibomar/kv/assert""
+	""github.com/khatibomar/kv/assert"/is"
 )
 
 func main() {

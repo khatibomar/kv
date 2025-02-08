@@ -1,10 +1,10 @@
-package validation
+package kv
 
 import (
 	"context"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/khatibomar/kv/assert"
 )
 
 func TestMap(t *testing.T) {

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-package validation
+package kv
 
 import (
 	"context"
@@ -27,7 +27,7 @@ type EachRule struct {
 
 // Validate loops through the given iterable and calls the Ozzo Validate() method for each value.
 func (r EachRule) Validate(value interface{}) error {
-	return r.ValidateWithContext(nil, value)
+	return r.ValidateWithContext(context.TODO(), value)
 }
 
 // ValidateWithContext loops through the given iterable and calls the Ozzo ValidateWithContext() method for each value.

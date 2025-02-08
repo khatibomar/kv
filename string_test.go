@@ -2,14 +2,14 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-package validation
+package kv
 
 import (
 	"database/sql"
 	"reflect"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/khatibomar/kv/assert"
 )
 
 func validateMe(s string) bool {
