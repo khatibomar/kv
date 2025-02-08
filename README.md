@@ -1,6 +1,6 @@
 # KV 
 
-[![CI status](https://github.com/khatibomar/kv/actions/workflows/main.yml/badge.svg)]
+![CI status](https://github.com/khatibomar/kv/actions/workflows/main.yml/badge.svg)
 [![GoDoc](https://godoc.org/github.com/khatibomar/kv?status.png)](http://godoc.org/github.com/khatibomar/kv)
 [![Go Report](https://goreportcard.com/badge/github.com/khatibomar/kv)](https://goreportcard.com/report/github.com/khatibomar/kv)
 
