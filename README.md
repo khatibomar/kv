@@ -1,5 +1,6 @@
 # KV 
 
+![CI check](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
 [![GoDoc](https://godoc.org/github.com/khatibomar/kv?status.png)](http://godoc.org/github.com/khatibomar/kv)
 [![Coverage Status](https://coveralls.io/repos/github/khatibomar/kv/badge.svg?branch=master)](https://coveralls.io/github/khatibomar/kv?branch=master)
 [![Go Report](https://goreportcard.com/badge/github.com/khatibomar/kv)](https://goreportcard.com/report/github.com/khatibomar/kv)
