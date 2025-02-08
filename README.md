@@ -1,13 +1,12 @@
-# ozzo-validation
+# KV 
 
-[![GoDoc](https://godoc.org/github.com/go-ozzo/ozzo-validation?status.png)](http://godoc.org/github.com/go-ozzo/ozzo-validation)
-[![Build Status](https://travis-ci.org/go-ozzo/ozzo-validation.svg?branch=master)](https://travis-ci.org/go-ozzo/ozzo-validation)
-[![Coverage Status](https://coveralls.io/repos/github/go-ozzo/ozzo-validation/badge.svg?branch=master)](https://coveralls.io/github/go-ozzo/ozzo-validation?branch=master)
-[![Go Report](https://goreportcard.com/badge/github.com/go-ozzo/ozzo-validation)](https://goreportcard.com/report/github.com/go-ozzo/ozzo-validation)
+[![GoDoc](https://godoc.org/github.com/khatibomar/kv?status.png)](http://godoc.org/github.com/khatibomar/kv)
+[![Coverage Status](https://coveralls.io/repos/github/khatibomar/kv/badge.svg?branch=master)](https://coveralls.io/github/khatibomar/kv?branch=master)
+[![Go Report](https://goreportcard.com/badge/github.com/khatibomar/kv)](https://goreportcard.com/report/github.com/khatibomar/kv)
 
 ## Description
 
-ozzo-validation is a Go package that provides configurable and extensible data validation capabilities.
+KV (Kanna Validator) is a Go package that provides configurable and extensible data validation capabilities.
 It has the following features:
 
 * use normal programming constructs rather than error-prone struct tags to specify how data should be validated.
@@ -21,24 +20,19 @@ It has the following features:
 
 For an example on how this library is used in an application, please refer to [go-rest-api](https://github.com/qiangxue/go-rest-api) which is a starter kit for building RESTful APIs in Go.
 
-## Requirements
-
-Go 1.13 or above.
-
-
 ## Getting Started
 
-The ozzo-validation package mainly includes a set of validation rules and two validation methods. You use 
+The KV package is a fork of [ozzo-validation](https://github.com/go-ozzo/ozzo-validation) mainly includes a set of validation rules and two validation methods. You use 
 validation rules to describe how a value should be considered valid, and you call either `validation.Validate()`
 or `validation.ValidateStruct()` to validate the value.
-
+In this fork I am aiming to remove usage of reflection.
 
 ### Installation
 
 Run the following command to install the package:
 
 ```
-go get github.com/go-ozzo/ozzo-validation
+go get github.com/khatibomar/kv
 ```
 
 ### Validating a Simple Value
@@ -51,8 +45,8 @@ package main
 import (
 	"fmt"
 
-	""github.com/khatibomar/kv/assert""
-	""github.com/khatibomar/kv/assert"/is"
+	"github.com/khatibomar/kv"
+	"github.com/khatibomar/kv/is"
 )
 
 func main() {

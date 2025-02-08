@@ -25,12 +25,12 @@ type EachRule struct {
 	rules []Rule
 }
 
-// Validate loops through the given iterable and calls the Ozzo Validate() method for each value.
+// Validate loops through the given iterable and calls the KV Validate() method for each value.
 func (r EachRule) Validate(value interface{}) error {
 	return r.ValidateWithContext(context.TODO(), value)
 }
 
-// ValidateWithContext loops through the given iterable and calls the Ozzo ValidateWithContext() method for each value.
+// ValidateWithContext loops through the given iterable and calls the KV ValidateWithContext() method for each value.
 func (r EachRule) ValidateWithContext(ctx context.Context, value interface{}) error {
 	errs := Errors{}
 
