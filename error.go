@@ -22,6 +22,7 @@ type (
 		SetMessage(string) Error
 		Params() map[string]interface{}
 		SetParams(map[string]interface{}) Error
+		AddParam(name string, value interface{}) Error
 	}
 
 	// ErrorObject is the default validation error

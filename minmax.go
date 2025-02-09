@@ -22,14 +22,12 @@ type ThresholdRule[T Ordered] struct {
 	threshold T
 	operator  int
 	err       Error
-	params    map[string]any
 }
 
 type TimeThresholdRule struct {
 	threshold time.Time
 	operator  int
 	err       Error
-	params    map[string]any
 }
 
 const (
@@ -42,44 +40,52 @@ const (
 // Min returns a validation rule that checks if a value is greater or equal than the specified value.
 // By calling Exclusive, the rule will check if the value is strictly greater than the specified value.
 func Min[T Ordered](min T) ThresholdRule[T] {
+	err := ErrMinGreaterEqualThanRequired
+	err = err.AddParam("threshold", min)
+
 	return ThresholdRule[T]{
 		threshold: min,
 		operator:  greaterEqualThan,
-		err:       ErrMinGreaterEqualThanRequired,
-		params:    map[string]any{"threshold": min},
+		err:       err,
 	}
 }
 
 // MinTime returns a validation rule that checks if a time is greater or equal than the specified time.
 // By calling Exclusive, the rule will check if the time is strictly greater than the specified time.
 func MinTime(min time.Time) TimeThresholdRule {
+	err := ErrMinGreaterEqualThanRequired
+	err = err.AddParam("threshold", min)
+
 	return TimeThresholdRule{
 		threshold: min,
 		operator:  greaterEqualThan,
-		err:       ErrMinGreaterEqualThanRequired,
-		params:    map[string]any{"threshold": min},
+		err:       err,
 	}
 }
 
 // Max returns a validation rule that checks if a value is less or equal than the specified value.
 // By calling Exclusive, the rule will check if the value is strictly less than the specified value.
 func Max[T Ordered](max T) ThresholdRule[T] {
+	err := ErrMaxLessEqualThanRequired
+	err = err.AddParam("threshold", max)
+
 	return ThresholdRule[T]{
 		threshold: max,
 		operator:  lessEqualThan,
-		err:       ErrMaxLessEqualThanRequired,
-		params:    map[string]any{"threshold": max},
+		err:       err,
 	}
 }
 
 // MaxTime returns a validation rule that checks if a time is less or equal than the specified time.
 // By calling Exclusive, the rule will check if the time is strictly less than the specified time.
 func MaxTime(max time.Time) TimeThresholdRule {
+	err := ErrMaxLessEqualThanRequired
+	err = err.AddParam("threshold", max)
+
 	return TimeThresholdRule{
 		threshold: max,
 		operator:  lessEqualThan,
-		err:       ErrMaxLessEqualThanRequired,
-		params:    map[string]any{"threshold": max},
+		err:       err,
 	}
 }
 
@@ -87,10 +93,10 @@ func MaxTime(max time.Time) TimeThresholdRule {
 func (r ThresholdRule[T]) Exclusive() ThresholdRule[T] {
 	if r.operator == greaterEqualThan {
 		r.operator = greaterThan
-		r.err = ErrMinGreaterThanRequired
+		r.err = ErrMinGreaterThanRequired.SetParams(r.err.Params())
 	} else if r.operator == lessEqualThan {
 		r.operator = lessThan
-		r.err = ErrMaxLessThanRequired
+		r.err = ErrMaxLessThanRequired.SetParams(r.err.Params())
 	}
 	return r
 }
@@ -99,10 +105,10 @@ func (r ThresholdRule[T]) Exclusive() ThresholdRule[T] {
 func (r TimeThresholdRule) Exclusive() TimeThresholdRule {
 	if r.operator == greaterEqualThan {
 		r.operator = greaterThan
-		r.err = ErrMinGreaterThanRequired
+		r.err = ErrMinGreaterThanRequired.SetParams(r.err.Params())
 	} else if r.operator == lessEqualThan {
 		r.operator = lessThan
-		r.err = ErrMaxLessThanRequired
+		r.err = ErrMaxLessThanRequired.SetParams(r.err.Params())
 	}
 	return r
 }
@@ -133,7 +139,7 @@ func (r ThresholdRule[T]) Validate(value T) error {
 		}
 	}
 
-	return r.err.SetParams(r.params)
+	return r.err
 }
 
 // Validate checks if the given value is valid or not.
@@ -161,7 +167,7 @@ func (r TimeThresholdRule) Validate(value time.Time) error {
 		}
 	}
 
-	return r.err.SetParams(r.params)
+	return r.err
 }
 
 // Error sets the error message for the rule.
