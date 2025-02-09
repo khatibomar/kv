@@ -109,7 +109,8 @@ func (r TimeThresholdRule) Exclusive() TimeThresholdRule {
 
 // Validate checks if the given value is valid or not.
 func (r ThresholdRule[T]) Validate(value T) error {
-	if IsEmpty(value) {
+	var zero T
+	if value == zero {
 		return nil
 	}
 
@@ -137,7 +138,7 @@ func (r ThresholdRule[T]) Validate(value T) error {
 
 // Validate checks if the given value is valid or not.
 func (r TimeThresholdRule) Validate(value time.Time) error {
-	if IsEmpty(value) {
+	if value.IsZero() {
 		return nil
 	}
 
