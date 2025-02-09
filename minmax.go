@@ -22,12 +22,14 @@ type ThresholdRule[T Ordered] struct {
 	threshold T
 	operator  int
 	err       Error
+	params    map[string]any
 }
 
 type TimeThresholdRule struct {
 	threshold time.Time
 	operator  int
 	err       Error
+	params    map[string]any
 }
 
 const (
@@ -44,6 +46,7 @@ func Min[T Ordered](min T) ThresholdRule[T] {
 		threshold: min,
 		operator:  greaterEqualThan,
 		err:       ErrMinGreaterEqualThanRequired,
+		params:    map[string]any{"threshold": min},
 	}
 }
 
@@ -54,6 +57,7 @@ func MinTime(min time.Time) TimeThresholdRule {
 		threshold: min,
 		operator:  greaterEqualThan,
 		err:       ErrMinGreaterEqualThanRequired,
+		params:    map[string]any{"threshold": min},
 	}
 }
 
@@ -64,6 +68,7 @@ func Max[T Ordered](max T) ThresholdRule[T] {
 		threshold: max,
 		operator:  lessEqualThan,
 		err:       ErrMaxLessEqualThanRequired,
+		params:    map[string]any{"threshold": max},
 	}
 }
 
@@ -74,6 +79,7 @@ func MaxTime(max time.Time) TimeThresholdRule {
 		threshold: max,
 		operator:  lessEqualThan,
 		err:       ErrMaxLessEqualThanRequired,
+		params:    map[string]any{"threshold": max},
 	}
 }
 
@@ -107,22 +113,26 @@ func (r ThresholdRule[T]) Validate(value T) error {
 		return nil
 	}
 
-	valid := false
 	switch r.operator {
 	case greaterThan:
-		valid = value > r.threshold
+		if value > r.threshold {
+			return nil
+		}
 	case greaterEqualThan:
-		valid = value >= r.threshold
+		if value >= r.threshold {
+			return nil
+		}
 	case lessThan:
-		valid = value < r.threshold
+		if value < r.threshold {
+			return nil
+		}
 	case lessEqualThan:
-		valid = value <= r.threshold
+		if value <= r.threshold {
+			return nil
+		}
 	}
 
-	if !valid {
-		return r.err.SetParams(map[string]any{"threshold": r.threshold})
-	}
-	return nil
+	return r.err.SetParams(r.params)
 }
 
 // Validate checks if the given value is valid or not.
@@ -131,22 +141,26 @@ func (r TimeThresholdRule) Validate(value time.Time) error {
 		return nil
 	}
 
-	valid := false
 	switch r.operator {
 	case greaterThan:
-		valid = value.After(r.threshold)
+		if value.After(r.threshold) {
+			return nil
+		}
 	case greaterEqualThan:
-		valid = value.After(r.threshold) || value.Equal(r.threshold)
+		if value.After(r.threshold) || value.Equal(r.threshold) {
+			return nil
+		}
 	case lessThan:
-		valid = value.Before(r.threshold)
+		if value.Before(r.threshold) {
+			return nil
+		}
 	case lessEqualThan:
-		valid = value.Before(r.threshold) || value.Equal(r.threshold)
+		if value.Before(r.threshold) || value.Equal(r.threshold) {
+			return nil
+		}
 	}
 
-	if !valid {
-		return r.err.SetParams(map[string]any{"threshold": r.threshold})
-	}
-	return nil
+	return r.err.SetParams(r.params)
 }
 
 // Error sets the error message for the rule.
