@@ -32,7 +32,7 @@ type RequiredRule struct {
 }
 
 // Validate checks if the given value is valid or not.
-func (r RequiredRule) Validate(value interface{}) error {
+func (r RequiredRule) Validate(value any) error {
 	if r.condition {
 		value, isNil := Indirect(value)
 		if r.skipNil && !isNil && IsEmpty(value) || !r.skipNil && (isNil || IsEmpty(value)) {

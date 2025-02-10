@@ -25,7 +25,7 @@ type absentRule struct {
 }
 
 // Validate checks if the given value is valid or not.
-func (r absentRule) Validate(value interface{}) error {
+func (r absentRule) Validate(value any) error {
 	if r.condition {
 		value, isNil := Indirect(value)
 		if !r.skipNil && !isNil || r.skipNil && !isNil && !IsEmpty(value) {

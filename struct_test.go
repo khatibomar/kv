@@ -72,7 +72,7 @@ func TestValidateStruct(t *testing.T) {
 	m5 := Model2{Model3: Model3{A: "internal"}}
 	tests := []struct {
 		tag   string
-		model interface{}
+		model any
 		rules []*FieldRules
 		err   string
 	}{
@@ -151,7 +151,7 @@ func TestValidateStructWithContext(t *testing.T) {
 	m3 := Model5{}
 	tests := []struct {
 		tag   string
-		model interface{}
+		model any
 		rules []*FieldRules
 		err   string
 	}{

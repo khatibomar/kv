@@ -16,7 +16,7 @@ func TestMatch(t *testing.T) {
 	tests := []struct {
 		tag   string
 		re    string
-		value interface{}
+		value any
 		err   string
 	}{
 		{"t1", "[a-z]+", "abc", ""},

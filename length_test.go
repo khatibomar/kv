@@ -16,7 +16,7 @@ func TestLength(t *testing.T) {
 	tests := []struct {
 		tag      string
 		min, max int
-		value    interface{}
+		value    any
 		err      string
 	}{
 		{"t1", 2, 4, "abc", ""},
@@ -49,7 +49,7 @@ func TestRuneLength(t *testing.T) {
 	tests := []struct {
 		tag      string
 		min, max int
-		value    interface{}
+		value    any
 		err      string
 	}{
 		{"t1", 2, 4, "abc", ""},

@@ -8,16 +8,16 @@ import (
 )
 
 func TestMap(t *testing.T) {
-	var m0 map[string]interface{}
-	m1 := map[string]interface{}{"A": "abc", "B": "xyz", "c": "abc", "D": (*string)(nil), "F": (*String123)(nil), "H": []string{"abc", "abc"}, "I": map[string]string{"foo": "abc"}}
-	m2 := map[string]interface{}{"E": String123("xyz"), "F": (*String123)(nil)}
-	m3 := map[string]interface{}{"M3": Model3{}}
-	m4 := map[string]interface{}{"M3": Model3{A: "abc"}}
-	m5 := map[string]interface{}{"A": "internal", "B": ""}
+	var m0 map[string]any
+	m1 := map[string]any{"A": "abc", "B": "xyz", "c": "abc", "D": (*string)(nil), "F": (*String123)(nil), "H": []string{"abc", "abc"}, "I": map[string]string{"foo": "abc"}}
+	m2 := map[string]any{"E": String123("xyz"), "F": (*String123)(nil)}
+	m3 := map[string]any{"M3": Model3{}}
+	m4 := map[string]any{"M3": Model3{A: "abc"}}
+	m5 := map[string]any{"A": "internal", "B": ""}
 	m6 := map[int]string{11: "abc", 22: "xyz"}
 	tests := []struct {
 		tag   string
-		model interface{}
+		model any
 		rules []*KeyRules
 		err   string
 	}{
@@ -75,7 +75,7 @@ func TestMap(t *testing.T) {
 		assertError(t, test.err, err2, test.tag)
 	}
 
-	a := map[string]interface{}{"Name": "name", "Value": "demo", "Extra": true}
+	a := map[string]any{"Name": "name", "Value": "demo", "Extra": true}
 	err := Validate(a, Map(
 		Key("Name", Required),
 		Key("Value", Required, Length(5, 10)),
@@ -84,11 +84,11 @@ func TestMap(t *testing.T) {
 }
 
 func TestMapWithContext(t *testing.T) {
-	m1 := map[string]interface{}{"A": "abc", "B": "xyz", "c": "abc", "g": "xyz"}
-	m2 := map[string]interface{}{"A": "internal", "B": ""}
+	m1 := map[string]any{"A": "abc", "B": "xyz", "c": "abc", "g": "xyz"}
+	m2 := map[string]any{"A": "internal", "B": ""}
 	tests := []struct {
 		tag   string
-		model interface{}
+		model any
 		rules []*KeyRules
 		err   string
 	}{
@@ -108,7 +108,7 @@ func TestMapWithContext(t *testing.T) {
 		assertError(t, test.err, err, test.tag)
 	}
 
-	a := map[string]interface{}{"Name": "name", "Value": "demo", "Extra": true}
+	a := map[string]any{"Name": "name", "Value": "demo", "Extra": true}
 	err := ValidateWithContext(context.Background(), a, Map(
 		Key("Name", Required),
 		Key("Value", Required, Length(5, 10)),

@@ -17,7 +17,7 @@ func TestNil(t *testing.T) {
 	var time1 time.Time
 	tests := []struct {
 		tag   string
-		value interface{}
+		value any
 		err   string
 	}{
 		{"t1", 123, "must be blank"},
@@ -42,7 +42,7 @@ func TestEmpty(t *testing.T) {
 	var time2 time.Time
 	tests := []struct {
 		tag   string
-		value interface{}
+		value any
 		err   string
 	}{
 		{"t1", 123, "must be blank"},

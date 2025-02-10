@@ -15,7 +15,7 @@ func TestEach(t *testing.T) {
 
 	tests := []struct {
 		tag   string
-		value interface{}
+		value any
 		err   string
 	}{
 		{"t1", nil, "must be an iterable (map, slice or array)"},
@@ -24,14 +24,14 @@ func TestEach(t *testing.T) {
 		{"t4", map[string]string{"key1": "", "key2": "value2", "key3": ""}, "key1: cannot be blank; key3: cannot be blank."},
 		{"t5", map[string]map[string]string{"key1": {"key1.1": "value1"}, "key2": {"key2.1": "value1"}}, ""},
 		{"t6", map[string]map[string]string{"": nil}, ": cannot be blank."},
-		{"t7", map[interface{}]interface{}{}, ""},
-		{"t8", map[interface{}]interface{}{"key1": struct{ foo string }{"foo"}}, ""},
-		{"t9", map[interface{}]interface{}{nil: "", "": "", "key1": nil}, ": cannot be blank; key1: cannot be blank."},
+		{"t7", map[any]any{}, ""},
+		{"t8", map[any]any{"key1": struct{ foo string }{"foo"}}, ""},
+		{"t9", map[any]any{nil: "", "": "", "key1": nil}, ": cannot be blank; key1: cannot be blank."},
 		{"t10", []string{"value1", "value2", "value3"}, ""},
 		{"t11", []string{"", "value2", ""}, "0: cannot be blank; 2: cannot be blank."},
-		{"t12", []interface{}{struct{ foo string }{"foo"}}, ""},
-		{"t13", []interface{}{nil, a}, "0: cannot be blank; 1: cannot be blank."},
-		{"t14", []interface{}{c0, c1, f}, "0: cannot be blank."},
+		{"t12", []any{struct{ foo string }{"foo"}}, ""},
+		{"t13", []any{nil, a}, "0: cannot be blank; 1: cannot be blank."},
+		{"t14", []any{c0, c1, f}, "0: cannot be blank."},
 	}
 
 	for _, test := range tests {
@@ -42,7 +42,7 @@ func TestEach(t *testing.T) {
 }
 
 func TestEachWithContext(t *testing.T) {
-	rule := Each(WithContext(func(ctx context.Context, value interface{}) error {
+	rule := Each(WithContext(func(ctx context.Context, value any) error {
 		if !strings.Contains(value.(string), ctx.Value(contains).(string)) {
 			return errors.New("unexpected value")
 		}
@@ -53,7 +53,7 @@ func TestEachWithContext(t *testing.T) {
 
 	tests := []struct {
 		tag   string
-		value interface{}
+		value any
 		ctx   context.Context
 		err   string
 	}{

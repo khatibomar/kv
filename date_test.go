@@ -15,7 +15,7 @@ func TestDate(t *testing.T) {
 	tests := []struct {
 		tag    string
 		layout string
-		value  interface{}
+		value  any
 		err    string
 	}{
 		{"t1", time.ANSIC, "", ""},

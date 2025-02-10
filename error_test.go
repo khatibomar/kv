@@ -105,7 +105,7 @@ func TestErrorObject_Message(t *testing.T) {
 }
 
 func TestErrorObject_Params(t *testing.T) {
-	p := map[string]interface{}{"A": "val1", "AA": "val2"}
+	p := map[string]any{"A": "val1", "AA": "val2"}
 
 	err := NewError("code", "A").(ErrorObject)
 	err = err.SetParams(p).(ErrorObject)
@@ -116,7 +116,7 @@ func TestErrorObject_Params(t *testing.T) {
 }
 
 func TestErrorObject_AddParam2(t *testing.T) {
-	p := map[string]interface{}{"key": "val"}
+	p := map[string]any{"key": "val"}
 	err := NewError("code", "A").(ErrorObject)
 	err = err.AddParam("key", "val").(ErrorObject)
 
@@ -125,7 +125,7 @@ func TestErrorObject_AddParam2(t *testing.T) {
 }
 
 func TestErrorObject_AddParam(t *testing.T) {
-	p := map[string]interface{}{"A": "val1", "B": "val2"}
+	p := map[string]any{"A": "val1", "B": "val2"}
 
 	err := NewError("code", "A").(ErrorObject)
 	err = err.SetParams(p).(ErrorObject)
@@ -159,7 +159,7 @@ func TestError_Message(t *testing.T) {
 }
 
 func TestError_Params(t *testing.T) {
-	p := map[string]interface{}{"A": "val1", "AA": "val2"}
+	p := map[string]any{"A": "val1", "AA": "val2"}
 
 	err := NewError("code", "A")
 	err = err.SetParams(p)
@@ -169,7 +169,7 @@ func TestError_Params(t *testing.T) {
 }
 
 func TestValidationError(t *testing.T) {
-	params := map[string]interface{}{
+	params := map[string]any{
 		"A": "B",
 	}
 
@@ -180,7 +180,7 @@ func TestValidationError(t *testing.T) {
 	assert.Equal(t, err.Message(), "msg")
 	assert.Equal(t, err.Params(), params)
 
-	params = map[string]interface{}{"min": 1}
+	params = map[string]any{"min": 1}
 	err = err.SetParams(params)
 
 	assert.Equal(t, err.Params(), params)

@@ -18,7 +18,7 @@ func TestEnsureString(t *testing.T) {
 
 	tests := []struct {
 		tag      string
-		value    interface{}
+		value    any
 		expected string
 		hasError bool
 	}{
@@ -51,7 +51,7 @@ func TestStringOrBytes(t *testing.T) {
 
 	tests := []struct {
 		tag      string
-		value    interface{}
+		value    any
 		str      string
 		bs       []byte
 		isString bool
@@ -84,7 +84,7 @@ func TestLengthOfValue(t *testing.T) {
 
 	tests := []struct {
 		tag    string
-		value  interface{}
+		value  any
 		length int
 		err    string
 	}{
@@ -108,7 +108,7 @@ func TestToInt(t *testing.T) {
 
 	tests := []struct {
 		tag    string
-		value  interface{}
+		value  any
 		result int64
 		err    string
 	}{
@@ -138,7 +138,7 @@ func TestToUint(t *testing.T) {
 
 	tests := []struct {
 		tag    string
-		value  interface{}
+		value  any
 		result uint64
 		err    string
 	}{
@@ -169,7 +169,7 @@ func TestToFloat(t *testing.T) {
 
 	tests := []struct {
 		tag    string
-		value  interface{}
+		value  any
 		result float64
 		err    string
 	}{
@@ -200,7 +200,7 @@ func TestIsEmpty(t *testing.T) {
 	var time2 time.Time
 	tests := []struct {
 		tag   string
-		value interface{}
+		value any
 		empty bool
 	}{
 		// nil
@@ -273,8 +273,8 @@ func TestIndirect(t *testing.T) {
 
 	tests := []struct {
 		tag    string
-		value  interface{}
-		result interface{}
+		value  any
+		result any
 		isNil  bool
 	}{
 		{"t1", 100, 100, false},

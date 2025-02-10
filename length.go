@@ -50,7 +50,7 @@ type LengthRule struct {
 }
 
 // Validate checks if the given value is valid or not.
-func (r LengthRule) Validate(value interface{}) error {
+func (r LengthRule) Validate(value any) error {
 	value, isNil := Indirect(value)
 	if isNil || IsEmpty(value) {
 		return nil
@@ -100,5 +100,5 @@ func buildLengthRuleError(min, max int) (err Error) {
 		err = ErrLengthEmptyRequired
 	}
 
-	return err.SetParams(map[string]interface{}{"min": min, "max": max})
+	return err.SetParams(map[string]any{"min": min, "max": max})
 }

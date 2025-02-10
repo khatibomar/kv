@@ -103,7 +103,7 @@ func Example_four() {
 
 	err := kv.Errors{
 		"name":  kv.Validate(c.Name, kv.Required, kv.Length(5, 20)),
-		"email": kv.Validate(c.Name, kv.Required, is.Email),
+		"email": kv.Validate(c.Email, kv.Required, is.Email),
 		"zip":   kv.Validate(c.Address.Zip, kv.Required, kv.Match(regexp.MustCompile("^[0-9]{5}$"))),
 	}.Filter()
 	fmt.Println(err)
@@ -135,7 +135,7 @@ type contextKey int
 
 func Example_six() {
 	key := contextKey(1)
-	rule := kv.WithContext(func(ctx context.Context, value interface{}) error {
+	rule := kv.WithContext(func(ctx context.Context, value any) error {
 		s, _ := value.(string)
 		if ctx.Value(key) == s {
 			return nil
@@ -156,10 +156,10 @@ func Example_six() {
 }
 
 func Example_seven() {
-	c := map[string]interface{}{
+	c := map[string]any{
 		"Name":  "Qiang Xue",
 		"Email": "q",
-		"Address": map[string]interface{}{
+		"Address": map[string]any{
 			"Street": "123",
 			"City":   "Unknown",
 			"State":  "Virginia",

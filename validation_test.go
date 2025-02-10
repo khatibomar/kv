@@ -25,7 +25,7 @@ func TestValidate(t *testing.T) {
 	)
 	tests := []struct {
 		tag            string
-		value          interface{}
+		value          any
 		err            string
 		errWithContext string
 	}{
@@ -79,7 +79,7 @@ func TestValidate(t *testing.T) {
 }
 
 func stringEqual(str string) RuleFunc {
-	return func(value interface{}) error {
+	return func(value any) error {
 		s, _ := value.(string)
 		if s != str {
 			return errors.New("unexpected string")
@@ -89,7 +89,7 @@ func stringEqual(str string) RuleFunc {
 }
 
 func TestBy(t *testing.T) {
-	abcRule := By(func(value interface{}) error {
+	abcRule := By(func(value any) error {
 		s, _ := value.(string)
 		if s != "abc" {
 			return errors.New("must be abc")
@@ -113,7 +113,7 @@ type key int
 
 func TestByWithContext(t *testing.T) {
 	k := key(1)
-	abcRule := WithContext(func(ctx context.Context, value interface{}) error {
+	abcRule := WithContext(func(ctx context.Context, value any) error {
 		if ctx.Value(k) != value.(string) {
 			return errors.New("must be abc")
 		}
@@ -143,7 +143,7 @@ func assertError(t *testing.T, expected string, err error, tag string) {
 
 type validateAbc struct{}
 
-func (v *validateAbc) Validate(obj interface{}) error {
+func (v *validateAbc) Validate(obj any) error {
 	if !strings.Contains(obj.(string), "abc") {
 		return errors.New("error abc")
 	}
@@ -152,11 +152,11 @@ func (v *validateAbc) Validate(obj interface{}) error {
 
 type validateContextAbc struct{}
 
-func (v *validateContextAbc) Validate(obj interface{}) error {
+func (v *validateContextAbc) Validate(obj any) error {
 	return v.ValidateWithContext(context.Background(), obj)
 }
 
-func (v *validateContextAbc) ValidateWithContext(_ context.Context, obj interface{}) error {
+func (v *validateContextAbc) ValidateWithContext(_ context.Context, obj any) error {
 	if !strings.Contains(obj.(string), "abc") {
 		return errors.New("error abc")
 	}
@@ -165,7 +165,7 @@ func (v *validateContextAbc) ValidateWithContext(_ context.Context, obj interfac
 
 type validateXyz struct{}
 
-func (v *validateXyz) Validate(obj interface{}) error {
+func (v *validateXyz) Validate(obj any) error {
 	if !strings.Contains(obj.(string), "xyz") {
 		return errors.New("error xyz")
 	}
@@ -174,11 +174,11 @@ func (v *validateXyz) Validate(obj interface{}) error {
 
 type validateContextXyz struct{}
 
-func (v *validateContextXyz) Validate(obj interface{}) error {
+func (v *validateContextXyz) Validate(obj any) error {
 	return v.ValidateWithContext(context.Background(), obj)
 }
 
-func (v *validateContextXyz) ValidateWithContext(_ context.Context, obj interface{}) error {
+func (v *validateContextXyz) ValidateWithContext(_ context.Context, obj any) error {
 	if !strings.Contains(obj.(string), "xyz") {
 		return errors.New("error xyz")
 	}
@@ -187,7 +187,7 @@ func (v *validateContextXyz) ValidateWithContext(_ context.Context, obj interfac
 
 type validateInternalError struct{}
 
-func (v *validateInternalError) Validate(obj interface{}) error {
+func (v *validateInternalError) Validate(obj any) error {
 	if strings.Contains(obj.(string), "internal") {
 		return NewInternalError(errors.New("error internal"))
 	}

@@ -22,7 +22,7 @@ func TestWhen(t *testing.T) {
 	tests := []struct {
 		tag       string
 		condition bool
-		value     interface{}
+		value     any
 		rules     []Rule
 		elseRules []Rule
 		err       string
@@ -64,7 +64,7 @@ const (
 )
 
 func TestWhenWithContext(t *testing.T) {
-	rule := WithContext(func(ctx context.Context, value interface{}) error {
+	rule := WithContext(func(ctx context.Context, value any) error {
 		if !strings.Contains(value.(string), ctx.Value(contains).(string)) {
 			return errors.New("unexpected value")
 		}
@@ -76,7 +76,7 @@ func TestWhenWithContext(t *testing.T) {
 	tests := []struct {
 		tag       string
 		condition bool
-		value     interface{}
+		value     any
 		ctx       context.Context
 		err       string
 	}{
