@@ -3,19 +3,19 @@ package kv
 import "context"
 
 // When returns a validation rule that executes the given list of rules when the condition is true.
-func When(condition bool, rules ...Rule) WhenRule {
+func When(condition bool, rules ...Rule[any]) WhenRule {
 	return WhenRule{
 		condition: condition,
 		rules:     rules,
-		elseRules: []Rule{},
+		elseRules: []Rule[any]{},
 	}
 }
 
 // WhenRule is a validation rule that executes the given list of rules when the condition is true.
 type WhenRule struct {
 	condition bool
-	rules     []Rule
-	elseRules []Rule
+	rules     []Rule[any]
+	elseRules []Rule[any]
 }
 
 // Validate checks if the condition is true and if so, it validates the value using the specified rules.
@@ -39,7 +39,7 @@ func (r WhenRule) ValidateWithContext(ctx context.Context, value any) error {
 }
 
 // Else returns a validation rule that executes the given list of rules when the condition is false.
-func (r WhenRule) Else(rules ...Rule) WhenRule {
+func (r WhenRule) Else(rules ...Rule[any]) WhenRule {
 	r.elseRules = rules
 	return r
 }

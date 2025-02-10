@@ -15,7 +15,7 @@ import (
 func TestAll(t *testing.T) {
 	tests := []struct {
 		tag            string
-		rule           kv.Rule
+		rule           kv.Rule[any]
 		valid, invalid string
 		err            string
 	}{

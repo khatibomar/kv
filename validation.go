@@ -26,9 +26,9 @@ type (
 	}
 
 	// Rule represents a validation rule.
-	Rule interface {
+	Rule[T any] interface {
 		// Validate validates a value and returns a value if validation fails.
-		Validate(value any) error
+		Validate(value T) error
 	}
 
 	// RuleWithContext represents a context-aware validation rule.
@@ -65,7 +65,7 @@ var (
 //     Return with the validation result.
 //  3. If the value being validated is a map/slice/array, and the element type implements `Validatable`,
 //     for each element call the element value's `Validate()`. Return with the validation result.
-func Validate(value any, rules ...Rule) error {
+func Validate(value any, rules ...Rule[any]) error {
 	for _, rule := range rules {
 		if s, ok := rule.(skipRule); ok && s.skip {
 			return nil
@@ -113,7 +113,7 @@ func Validate(value any, rules ...Rule) error {
 //     for each element call the element value's `ValidateWithContext()`. Return with the validation result.
 //  5. If the value being validated is a map/slice/array, and the element type implements `Validatable`,
 //     for each element call the element value's `Validate()`. Return with the validation result.
-func ValidateWithContext(ctx context.Context, value any, rules ...Rule) error {
+func ValidateWithContext(ctx context.Context, value any, rules ...Rule[any]) error {
 	for _, rule := range rules {
 		if s, ok := rule.(skipRule); ok && s.skip {
 			return nil
@@ -262,11 +262,11 @@ func (r *inlineRule) ValidateWithContext(ctx context.Context, value any) error {
 }
 
 // By wraps a RuleFunc into a Rule.
-func By(f RuleFunc) Rule {
+func By(f RuleFunc) Rule[any] {
 	return &inlineRule{f: f}
 }
 
 // WithContext wraps a RuleWithContextFunc into a context-aware Rule.
-func WithContext(f RuleWithContextFunc) Rule {
+func WithContext(f RuleWithContextFunc) Rule[any] {
 	return &inlineRule{fc: f}
 }

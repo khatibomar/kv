@@ -27,7 +27,7 @@ type (
 	// FieldRules represents a rule set associated with a struct field.
 	FieldRules struct {
 		fieldPtr any
-		rules    []Rule
+		rules    []Rule[any]
 	}
 )
 
@@ -121,7 +121,7 @@ func ValidateStructWithContext(ctx context.Context, structPtr any, fields ...*Fi
 
 // Field specifies a struct field and the corresponding validation rules.
 // The struct field must be specified as a pointer to it.
-func Field(fieldPtr any, rules ...Rule) *FieldRules {
+func Field(fieldPtr any, rules ...Rule[any]) *FieldRules {
 	return &FieldRules{
 		fieldPtr: fieldPtr,
 		rules:    rules,

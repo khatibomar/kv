@@ -32,7 +32,7 @@ type (
 	KeyRules struct {
 		key      any
 		optional bool
-		rules    []Rule
+		rules    []Rule[any]
 	}
 )
 
@@ -126,7 +126,7 @@ func (r MapRule) ValidateWithContext(ctx context.Context, m any) error {
 }
 
 // Key specifies a map key and the corresponding validation rules.
-func Key(key any, rules ...Rule) *KeyRules {
+func Key(key any, rules ...Rule[any]) *KeyRules {
 	return &KeyRules{
 		key:   key,
 		rules: rules,

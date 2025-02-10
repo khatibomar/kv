@@ -14,7 +14,7 @@ import (
 // Each returns a validation rule that loops through an iterable (map, slice or array)
 // and validates each value inside with the provided rules.
 // An empty iterable is considered valid. Use the Required rule to make sure the iterable is not empty.
-func Each(rules ...Rule) EachRule {
+func Each(rules ...Rule[any]) EachRule {
 	return EachRule{
 		rules: rules,
 	}
@@ -22,7 +22,7 @@ func Each(rules ...Rule) EachRule {
 
 // EachRule is a validation rule that validates elements in a map/slice/array using the specified list of rules.
 type EachRule struct {
-	rules []Rule
+	rules []Rule[any]
 }
 
 // Validate loops through the given iterable and calls the KV Validate() method for each value.
