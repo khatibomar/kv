@@ -11,57 +11,100 @@ var (
 	ErrEmpty = NewError("validation_empty", "must be blank")
 )
 
-// Nil is a validation rule that checks if a value is nil.
-// It is the opposite of NotNil rule
-var Nil = absentRule{condition: true, skipNil: false}
-
-// Empty checks if a not nil value is empty.
-var Empty = absentRule{condition: true, skipNil: true}
-
-type absentRule struct {
+type NilRule[T comparable] struct {
 	condition bool
 	err       Error
-	skipNil   bool
+}
+
+type EmptyRule[T comparable] struct {
+	condition bool
+	err       Error
 }
 
 // Validate checks if the given value is valid or not.
-func (r absentRule) Validate(value any) error {
+func (r EmptyRule[T]) Validate(value *T) error {
 	if r.condition {
-		value, isNil := Indirect(value)
-		if !r.skipNil && !isNil || r.skipNil && !isNil && !IsEmpty(value) {
-			if r.err != nil {
-				return r.err
-			}
-			if r.skipNil {
-				return ErrEmpty
-			}
-			return ErrNil
-		}
+		return nil
 	}
-	return nil
+
+	if value == nil {
+		return nil
+	}
+
+	var zero T
+	if *value == zero {
+		return nil
+	}
+	return r.getError(ErrEmpty)
 }
 
 // When sets the condition that determines if the validation should be performed.
-func (r absentRule) When(condition bool) absentRule {
-	r.condition = condition
+func (r EmptyRule[T]) When(condition bool) EmptyRule[T] {
+	r.condition = !condition
 	return r
 }
 
 // Error sets the error message for the rule.
-func (r absentRule) Error(message string) absentRule {
+func (r EmptyRule[T]) Error(message string) EmptyRule[T] {
 	if r.err == nil {
-		if r.skipNil {
-			r.err = ErrEmpty
-		} else {
-			r.err = ErrNil
-		}
+		r.err = ErrEmpty
 	}
 	r.err = r.err.SetMessage(message)
 	return r
 }
 
 // ErrorObject sets the error struct for the rule.
-func (r absentRule) ErrorObject(err Error) absentRule {
+func (r EmptyRule[T]) ErrorObject(err Error) EmptyRule[T] {
 	r.err = err
 	return r
+}
+
+// getError returns the custom error if set, otherwise returns the default error
+func (r EmptyRule[T]) getError(defaultErr Error) error {
+	if r.err != nil {
+		return r.err
+	}
+	return defaultErr
+}
+
+// Validate checks if the given value is valid or not.
+func (r NilRule[T]) Validate(value *T) error {
+	if r.condition {
+		return nil
+	}
+
+	if value == nil {
+		return nil
+	}
+
+	return r.getError(ErrNil)
+}
+
+// When sets the condition that determines if the validation should be performed.
+func (r NilRule[T]) When(condition bool) NilRule[T] {
+	r.condition = !condition
+	return r
+}
+
+// Error sets the error message for the rule.
+func (r NilRule[T]) Error(message string) NilRule[T] {
+	if r.err == nil {
+		r.err = ErrNil
+	}
+	r.err = r.err.SetMessage(message)
+	return r
+}
+
+// ErrorObject sets the error struct for the rule.
+func (r NilRule[T]) ErrorObject(err Error) NilRule[T] {
+	r.err = err
+	return r
+}
+
+// getError returns the custom error if set, otherwise returns the default error
+func (r NilRule[T]) getError(defaultErr Error) error {
+	if r.err != nil {
+		return r.err
+	}
+	return defaultErr
 }
